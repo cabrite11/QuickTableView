@@ -10,6 +10,7 @@ import UIKit
 import ObjectiveC
 
 
+
 class UITableViewCellModel: NSObject{
     
     var cachedHeight: CGFloat?
