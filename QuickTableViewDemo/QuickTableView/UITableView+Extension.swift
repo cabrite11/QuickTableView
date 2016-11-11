@@ -34,30 +34,30 @@ extension UITableView {
 
 extension UITableView {
 
-    func insert(cellModel cellModel: UITableViewCellModel, atIndexPath indexPath: NSIndexPath) {
+    func insert(cellModel: UITableViewCellModel, atIndexPath indexPath: IndexPath) {
 
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        dataSourceArray.insertObject(cellModel, atIndex: indexPath.row)
+        dataSourceArray.insert(cellModel, at: indexPath.row)
         self.beginUpdates()
-        self.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        self.insertRows(at: [indexPath], with: .automatic)
         self.endUpdates()
     }
     
-    func insert(cellModels cellModels: [UITableViewCellModel], atIndexPath indexPath: NSIndexPath) {
+    func insert(cellModels: [UITableViewCellModel], atIndexPath indexPath: IndexPath) {
 
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
 
-        var indexPaths: [NSIndexPath] = []
+        var indexPaths: [IndexPath] = []
         var index = indexPath.row
         for cellModel in cellModels {
-            dataSourceArray.insertObject(cellModel, atIndex: index)
-            indexPaths.append(NSIndexPath(forRow: index, inSection: 0))
+            dataSourceArray.insert(cellModel, at: index)
+            indexPaths.append(IndexPath(row: index, section: 0))
             index = index + 1
         }
         
         self.beginUpdates()
-        self.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+        self.insertRows(at: indexPaths, with: .automatic)
         self.endUpdates()
     }
 }
@@ -66,22 +66,22 @@ extension UITableView {
 
 extension UITableView {
     
-    func append(cellModel cellModel: UITableViewCellModel) {
+    func append(cellModel: UITableViewCellModel) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        let indexPath = NSIndexPath(forRow: dataSourceArray.count, inSection: 0)
-        dataSourceArray.addObject(cellModel)
+        let indexPath = IndexPath(row: dataSourceArray.count, section: 0)
+        dataSourceArray.add(cellModel)
         
         self.beginUpdates()
-        self.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        self.insertRows(at: [indexPath], with: .automatic)
         self.endUpdates()
         
     }
     
-    func append(cellModels cellModels: [UITableViewCellModel]) {
+    func append(cellModels: [UITableViewCellModel]) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
         guard cellModels.count > 0 else {
             return
@@ -90,16 +90,16 @@ extension UITableView {
         let indexPaths = NSMutableArray()
         let dataSourceArrayCount = dataSourceArray.count
         for index in dataSourceArrayCount ... dataSourceArrayCount + cellModels.count - 1 {
-            let indexPath = NSIndexPath(forRow: index, inSection: 0)
-            indexPaths.addObject(indexPath)
+            let indexPath = IndexPath(row: index, section: 0)
+            indexPaths.add(indexPath)
         }
         
         for cellModel in cellModels {
-            dataSourceArray.addObject(cellModel)
+            dataSourceArray.add(cellModel)
         }
         
         self.beginUpdates()
-        self.insertRowsAtIndexPaths(NSArray.init(array: indexPaths) as! [NSIndexPath], withRowAnimation: .Automatic)
+        self.insertRows(at: NSArray.init(array: indexPaths) as! [IndexPath], with: .automatic)
         self.endUpdates()
     }
     
@@ -109,14 +109,14 @@ extension UITableView {
 
 extension UITableView {
     
-    func replace(cellModel cellModel: UITableViewCellModel, atIndexPath indexPath: NSIndexPath) {
+    func replace(cellModel: UITableViewCellModel, atIndexPath indexPath: IndexPath) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        dataSourceArray.replaceObjectAtIndex(indexPath.row, withObject: cellModel)
+        dataSourceArray.replaceObject(at: indexPath.row, with: cellModel)
         
         self.beginUpdates()
-        self.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        self.reloadRows(at: [indexPath], with: .automatic)
         self.endUpdates()
         
     }
@@ -124,21 +124,21 @@ extension UITableView {
     func replace(new newCellModels: [UITableViewCellModel],
                  old oldCellModels: [UITableViewCellModel]) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        var indexPaths: [NSIndexPath] = []
+        var indexPaths: [IndexPath] = []
         for index in 0 ... newCellModels.count {
             guard index < oldCellModels.count else {
                 break
             }
 
-            let indexInDataSource = dataSourceArray.indexOfObject(oldCellModels[index])
-            indexPaths.append(NSIndexPath(forRow: indexInDataSource, inSection: 0))
-            dataSourceArray.replaceObjectAtIndex(indexInDataSource, withObject: newCellModels[index])
+            let indexInDataSource = dataSourceArray.index(of: oldCellModels[index])
+            indexPaths.append(IndexPath(row: indexInDataSource, section: 0))
+            dataSourceArray.replaceObject(at: indexInDataSource, with: newCellModels[index])
         }
 
         self.beginUpdates()
-        self.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: .Automatic)
+        self.reloadRows(at: indexPaths, with: .automatic)
         self.endUpdates()
     }
     
@@ -149,58 +149,58 @@ extension UITableView {
 
 extension UITableView {
     
-    func remove(cellModel cellModel: UITableViewCellModel) {
+    func remove(cellModel: UITableViewCellModel) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        if dataSourceArray.containsObject(cellModel) {
-            let index = dataSourceArray.indexOfObject(cellModel)
-            remove(atIndexPath: NSIndexPath(forRow: index, inSection: 0))
+        if dataSourceArray.contains(cellModel) {
+            let index = dataSourceArray.index(of: cellModel)
+            remove(atIndexPath: IndexPath(row: index, section: 0))
         }
     }
     
-    func remove(atIndexPath indexPath: NSIndexPath) {
+    func remove(atIndexPath indexPath: IndexPath) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
         guard indexPath.row < dataSourceArray.count else {
             return
         }
         
-        dataSourceArray.removeObjectAtIndex(indexPath.row)
+        dataSourceArray.removeObject(at: indexPath.row)
         self.beginUpdates()
-        self.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        self.deleteRows(at: [indexPath], with: .automatic)
         self.endUpdates()
     }
     
-    func remove(cellModels cellModels: [UITableViewCellModel]) {
+    func remove(cellModels: [UITableViewCellModel]) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        var mIndexPaths: [NSIndexPath] = []
+        var mIndexPaths: [IndexPath] = []
         for cellModel in cellModels {
-            if dataSourceArray.containsObject(cellModel) {
-                let index = dataSourceArray.indexOfObject(cellModel)
-                mIndexPaths.append(NSIndexPath(forRow: index, inSection: 0))
+            if dataSourceArray.contains(cellModel) {
+                let index = dataSourceArray.index(of: cellModel)
+                mIndexPaths.append(IndexPath(row: index, section: 0))
             }
         }
         remove(atIndexPaths: mIndexPaths)
         
     }
     
-    func remove(atIndexPaths indexPaths: [NSIndexPath]) {
+    func remove(atIndexPaths indexPaths: [IndexPath]) {
         
-        assert(dataSourceArray.isKindOfClass(NSMutableArray), "dataSourceArray must NOT be nil")
+        assert(dataSourceArray.isKind(of: NSMutableArray.self), "dataSourceArray must NOT be nil")
         
-        var mIndexPaths: [NSIndexPath] = []
+        var mIndexPaths: [IndexPath] = []
         for indexPath in indexPaths {
             if indexPath.row < dataSourceArray.count {
-                dataSourceArray.removeObjectAtIndex(indexPath.row)
+                dataSourceArray.removeObject(at: indexPath.row)
                 mIndexPaths.append(indexPath)
             }
         }
         self.beginUpdates()
-        self.deleteRowsAtIndexPaths(mIndexPaths, withRowAnimation: .Automatic)
+        self.deleteRows(at: mIndexPaths, with: .automatic)
         self.endUpdates()
     }
     
